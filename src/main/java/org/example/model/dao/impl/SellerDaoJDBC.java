@@ -40,37 +40,47 @@ public class SellerDaoJDBC implements SellerDao {
     public Seller findByid(Integer id) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        try{
-            preparedStatement =  connection.prepareStatement(
+        try {
+            preparedStatement = connection.prepareStatement(
                     "SELECT seller.*, department.Name as DepName"
-                    + "FROM seller INNER JOIN department "
-                    +"ON seller.DepartmentId = department.Id"
-                    +"WHERE seller.Id = ?"
+                            + "FROM seller INNER JOIN department "
+                            + "ON seller.DepartmentId = department.Id"
+                            + "WHERE seller.Id = ?"
             );
-            preparedStatement.setInt(1,id);
+            preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
-                Departament departament = new Departament();
-                departament.setId(resultSet.getInt("DepartmentId"));
-                departament.setName(resultSet.getString("DepName"));
-                Seller seller = new Seller();
-                seller.setId(resultSet.getInt("Id"));
-                seller.setName(resultSet.getString("Name"));
-                seller.setEmail(resultSet.getString("Email"));
-                seller.setBaseSalary(resultSet.getDouble("BaseSalary"));
-                seller.setBirthDate(resultSet.getDate("BirthDate"));
-                seller.setDepartament(departament);
+            if (resultSet.next()) {
+                Departament departament = instantiateDepartament(resultSet);
+                Seller seller = instantiateSeller(resultSet, departament);
                 return seller;
             }
             return null;
         } catch (SQLException e) {
             throw new DbException(e.getMessage());
-        }finally {
+        } finally {
             DB.closeStatement(preparedStatement);
             DB.closeResultSet(resultSet);
         }
 
 
+    }
+
+    private Seller instantiateSeller(ResultSet resultSet, Departament departament) throws SQLException {
+        Seller seller = new Seller();
+        seller.setId(resultSet.getInt("Id"));
+        seller.setName(resultSet.getString("Name"));
+        seller.setEmail(resultSet.getString("Email"));
+        seller.setBaseSalary(resultSet.getDouble("BaseSalary"));
+        seller.setBirthDate(resultSet.getDate("BirthDate"));
+        seller.setDepartament(departament);
+        return seller;
+    }
+
+    private Departament instantiateDepartament(ResultSet resultSet) throws SQLException {
+        Departament departament = new Departament();
+        departament.setId(resultSet.getInt("DepartmentId"));
+        departament.setName(resultSet.getString("DepName"));
+        return departament;
     }
 
     @Override
