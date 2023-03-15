@@ -5,7 +5,7 @@ import org.example.model.entities.Department;
 import java.util.List;
 
 
-public interface DepartamentDao {
+public interface DepartmentDao {
 
     void insert(Department department);
     void update(Department department);
