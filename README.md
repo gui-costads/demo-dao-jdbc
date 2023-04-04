@@ -5,7 +5,7 @@ Projetc to create a JDBC project design by Nelio Alves in course "Java Completo"
 ## Clone repository
 Open terminal and enter the commands
 ```
-mkdir java-chess-game
+mkdir demo-dao-jdbc
 cd demo-dao-jdbc
 git clone git@github.com:gui-costads/demo-dao-jdbc.git
 ```
